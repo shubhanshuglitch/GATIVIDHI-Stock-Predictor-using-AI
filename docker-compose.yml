@@ -1,0 +1,56 @@
+services:
+  ml-service:
+    build: ./ml-service
+    container_name: stockai-ml
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - stockai-net
+
+  backend:
+    build: ./backend
+    container_name: stockai-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/stockpredictor
+      - JWT_SECRET=stockpredictorsecretkey2024
+      - ML_SERVICE_URL=http://ml-service:8000
+    depends_on:
+      - mongo
+      - ml-service
+    restart: unless-stopped
+    networks:
+      - stockai-net
+
+  frontend:
+    build: ./frontend
+    container_name: stockai-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - stockai-net
+
+  mongo:
+    image: mongo:7
+    container_name: stockai-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+    networks:
+      - stockai-net
+
+volumes:
+  mongo-data:
+
+
+networks:
+  stockai-net:
+    driver: bridge

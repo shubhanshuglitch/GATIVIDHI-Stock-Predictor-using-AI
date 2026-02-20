@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.env
+*.egg-info/
+
+# Build outputs
+dist/
+build/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files
+*.h5
+*.pkl
+*.joblib
+
+# Logs
+*.log
+npm-debug.log*
