@@ -49,17 +49,8 @@ def predict_arima(data: np.ndarray, forecast_days: int = 30,
     # Train model
     model = train_arima(train_data, order)
     
-    # Predict on test set (in-sample + out-of-sample)
-    test_predictions = []
-    history = list(train_data)
-    
-    for i in range(len(test_data)):
-        m = ARIMA(history, order=order)
-        fitted = m.fit()
-        forecast = fitted.forecast(steps=1)
-        test_predictions.append(float(forecast[0]))
-        history.append(test_data[i])
-    
+    # Predict on test set
+    test_predictions = model.forecast(steps=len(test_data))
     test_predictions = np.array(test_predictions)
     
     # Forecast future values

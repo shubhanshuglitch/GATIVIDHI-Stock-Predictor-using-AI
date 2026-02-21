@@ -51,7 +51,7 @@ class ARIMARequest(PredictionRequest):
     order_q: int = 0
 
 class LSTMRequest(PredictionRequest):
-    epochs: int = 50
+    epochs: int = 10
     batch_size: int = 32
     sequence_length: int = 60
 
