@@ -28,6 +28,18 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Logging
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+@app.middleware("http")
+async def log_requests(request, call_next):
+    logger.info(f"Incoming request: {request.method} {request.url.path}")
+    response = await call_next(request)
+    logger.info(f"Response status: {response.status_code}")
+    return response
+
 # CORS
 app.add_middleware(
     CORSMiddleware,

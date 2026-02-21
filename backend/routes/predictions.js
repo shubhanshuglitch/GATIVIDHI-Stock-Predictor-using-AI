@@ -5,16 +5,48 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 const ML_SERVICE = process.env.ML_SERVICE_URL || 'http://localhost:8000';
 
+// @route   GET /api/predictions/test-ml
+// @desc    Test connection to ML Service
+// @access  Private
+router.get('/test-ml', auth, async (req, res) => {
+  try {
+    console.log(`Testing connection to: ${ML_SERVICE}`);
+    const response = await axios.get(`${ML_SERVICE}/`, { timeout: 10000 });
+    res.json({
+      message: 'Connection successful',
+      target: ML_SERVICE,
+      data: response.data
+    });
+  } catch (error) {
+    console.error('Connection test failed:', error.message);
+    res.status(502).json({
+      message: 'Connection test failed',
+      target: ML_SERVICE,
+      error: error.message
+    });
+  }
+});
+
 // @route   POST /api/predictions/arima
 // @desc    Get ARIMA predictions
 // @access  Private
 router.post('/arima', auth, async (req, res) => {
   try {
-    const response = await axios.post(`${ML_SERVICE}/api/predict/arima`, req.body);
+    console.log(`Calling ARIMA on ML Service: ${ML_SERVICE}/api/predict/arima`);
+    const response = await axios.post(`${ML_SERVICE}/api/predict/arima`, req.body, { timeout: 60000 });
     res.json(response.data);
   } catch (error) {
-    console.error('ARIMA prediction error:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({ message: error.response?.data?.detail || error.message || 'Error generating ARIMA prediction' });
+    console.error('ARIMA prediction error details:', {
+      url: `${ML_SERVICE}/api/predict/arima`,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+    res.status(error.response?.status || 500).json({ 
+      message: 'Error generating ARIMA prediction',
+      details: error.message,
+      ml_service: ML_SERVICE
+    });
   }
 });
 
