@@ -55,11 +55,21 @@ router.post('/arima', auth, async (req, res) => {
 // @access  Private
 router.post('/lstm', auth, async (req, res) => {
   try {
-    const response = await axios.post(`${ML_SERVICE}/api/predict/lstm`, req.body);
+    console.log(`Calling LSTM on ML Service: ${ML_SERVICE}/api/predict/lstm`);
+    const response = await axios.post(`${ML_SERVICE}/api/predict/lstm`, req.body, { timeout: 120000 });
     res.json(response.data);
   } catch (error) {
-    console.error('LSTM prediction error:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({ message: error.response?.data?.detail || error.message || 'Error generating LSTM prediction' });
+    console.error('LSTM prediction error details:', {
+      url: `${ML_SERVICE}/api/predict/lstm`,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+    res.status(error.response?.status || 500).json({ 
+      message: 'Error generating LSTM prediction',
+      details: error.message,
+      ml_service: ML_SERVICE
+    });
   }
 });
 
@@ -68,11 +78,21 @@ router.post('/lstm', auth, async (req, res) => {
 // @access  Private
 router.post('/moving-avg', auth, async (req, res) => {
   try {
-    const response = await axios.post(`${ML_SERVICE}/api/algorithms/moving-avg`, req.body);
+    console.log(`Calling Moving Avg on ML Service: ${ML_SERVICE}/api/algorithms/moving-avg`);
+    const response = await axios.post(`${ML_SERVICE}/api/algorithms/moving-avg`, req.body, { timeout: 30000 });
     res.json(response.data);
   } catch (error) {
-    console.error('Moving avg error:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({ message: error.response?.data?.detail || error.message || 'Error computing moving averages' });
+    console.error('Moving avg error details:', {
+      url: `${ML_SERVICE}/api/algorithms/moving-avg`,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+    res.status(error.response?.status || 500).json({ 
+      message: 'Error computing moving averages',
+      details: error.message,
+      ml_service: ML_SERVICE
+    });
   }
 });
 
@@ -81,11 +101,21 @@ router.post('/moving-avg', auth, async (req, res) => {
 // @access  Private
 router.post('/regression', auth, async (req, res) => {
   try {
-    const response = await axios.post(`${ML_SERVICE}/api/algorithms/regression`, req.body);
+    console.log(`Calling Regression on ML Service: ${ML_SERVICE}/api/algorithms/regression`);
+    const response = await axios.post(`${ML_SERVICE}/api/algorithms/regression`, req.body, { timeout: 45000 });
     res.json(response.data);
   } catch (error) {
-    console.error('Regression error:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({ message: error.response?.data?.detail || error.message || 'Error computing regression' });
+    console.error('Regression error details:', {
+      url: `${ML_SERVICE}/api/algorithms/regression`,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+    res.status(error.response?.status || 500).json({ 
+      message: 'Error computing regression',
+      details: error.message,
+      ml_service: ML_SERVICE
+    });
   }
 });
 
@@ -94,11 +124,21 @@ router.post('/regression', auth, async (req, res) => {
 // @access  Private
 router.post('/best-trade', auth, async (req, res) => {
   try {
-    const response = await axios.post(`${ML_SERVICE}/api/algorithms/best-trade`, req.body);
+    console.log(`Calling Best Trade on ML Service: ${ML_SERVICE}/api/algorithms/best-trade`);
+    const response = await axios.post(`${ML_SERVICE}/api/algorithms/best-trade`, req.body, { timeout: 30000 });
     res.json(response.data);
   } catch (error) {
-    console.error('Best trade error:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({ message: error.response?.data?.detail || error.message || 'Error computing best trades' });
+    console.error('Best trade error details:', {
+      url: `${ML_SERVICE}/api/algorithms/best-trade`,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+    res.status(error.response?.status || 500).json({ 
+      message: 'Error computing best trades',
+      details: error.message,
+      ml_service: ML_SERVICE
+    });
   }
 });
 
@@ -107,11 +147,21 @@ router.post('/best-trade', auth, async (req, res) => {
 // @access  Private
 router.post('/evaluate', auth, async (req, res) => {
   try {
-    const response = await axios.post(`${ML_SERVICE}/api/evaluate`, req.body);
+    console.log(`Calling Evaluate on ML Service: ${ML_SERVICE}/api/evaluate`);
+    const response = await axios.post(`${ML_SERVICE}/api/evaluate`, req.body, { timeout: 180000 });
     res.json(response.data);
   } catch (error) {
-    console.error('Evaluate error:', error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({ message: error.response?.data?.detail || error.message || 'Error evaluating models' });
+    console.error('Evaluate error details:', {
+      url: `${ML_SERVICE}/api/evaluate`,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+    res.status(error.response?.status || 500).json({ 
+      message: 'Error evaluating models',
+      details: error.message,
+      ml_service: ML_SERVICE
+    });
   }
 });
 
