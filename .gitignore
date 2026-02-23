@@ -3,7 +3,11 @@ node_modules/
 __pycache__/
 *.pyc
 .env
+.env.local
+.env.production.local
 *.egg-info/
+venv/
+env/
 
 # Build outputs
 dist/
@@ -26,3 +30,8 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sensitive data (keep templates only)
+# Note: .env.production files are templates - fill them but don't commit with real values

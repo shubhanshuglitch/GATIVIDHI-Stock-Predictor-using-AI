@@ -1,0 +1,16 @@
+# Railway Configuration for Backend
+# Place this in backend folder for Railway deployment
+
+# Build
+[build]
+builder = "NIXPACKS"
+
+# Environment
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+
+# Nixpacks config
+[nixpacks]
+nodeVersion = "18"

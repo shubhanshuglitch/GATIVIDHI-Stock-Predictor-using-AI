@@ -1,0 +1,42 @@
+# Render.com Blueprint for Stock Market Predictor
+# This file automates deployment of ML Service and Backend on Render
+
+services:
+  # ML Service (Python/FastAPI)
+  - type: web
+    name: stock-ml-service
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: PORT
+        value: 8000
+
+  # Backend (Node.js/Express)
+  - type: web
+    name: stock-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false  # Set this manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true  # Render auto-generates
+      - key: ML_SERVICE_URL
+        fromService:
+          name: stock-ml-service
+          type: web
+          property: url
+      - key: FRONTEND_URL
+        sync: false  # Set this after deploying frontend

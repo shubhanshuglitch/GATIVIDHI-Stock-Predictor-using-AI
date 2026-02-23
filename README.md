@@ -23,30 +23,48 @@ stock-market-predictor/
 | **Auth** | JWT (JSON Web Tokens) |
 | **Deployment** | Docker, Docker Compose, Nginx |
 
-## 🚀 Quick Start (Local Development)
+## 🚀 Quick Start (Without Docker)
 
 ### Prerequisites
 - **Node.js** 18+
 - **Python** 3.9+
-- **MongoDB** (local via Compass or Atlas)
+- **MongoDB** (running on localhost:27017)
 
-### 1. ML Service (Python)
+### Easy Setup (Recommended)
+
+```powershell
+# 1. Install all dependencies
+.\install-deps.ps1    # PowerShell
+# or
+install-deps.bat      # Command Prompt
+
+# 2. Start all services
+.\start-all.ps1       # PowerShell
+# or
+start-all.bat         # Command Prompt
+
+# 3. Access the app at http://localhost:5173
+```
+
+### Manual Setup
+
+#### 1. ML Service (Python)
 ```bash
 cd ml-service
 pip install -r requirements.txt
-python app.py
+python -m uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 # → Running on http://localhost:8000
 ```
 
-### 2. Backend (Node.js)
+#### 2. Backend (Node.js)
 ```bash
 cd backend
 npm install
-node server.js
+npm start
 # → Running on http://localhost:5000
 ```
 
-### 3. Frontend (React)
+#### 3. Frontend (React)
 ```bash
 cd frontend
 npm install
@@ -54,7 +72,13 @@ npm run dev
 # → Running on http://localhost:5173
 ```
 
-## 🐳 Docker Deployment
+### Helper Scripts
+- `.\check-status.ps1` — Check if all services are running
+- `.\stop-all.ps1` — Stop all running services
+
+📖 **For detailed deployment instructions and troubleshooting, see [DEPLOYMENT.md](DEPLOYMENT.md)**
+
+## 🐳 Docker Deployment (Alternative)
 
 ```bash
 # Build and start all services
@@ -106,6 +130,27 @@ docker-compose up --build
 - **MAE** — Mean Absolute Error
 - **R²** — Coefficient of Determination
 - **MAPE** — Mean Absolute Percentage Error
+
+## 🌐 Production Deployment
+
+Ready to deploy to the internet?
+
+### Quick Deploy (30 minutes)
+See **[QUICKSTART-DEPLOY.md](QUICKSTART-DEPLOY.md)** for fastest deployment
+
+### Detailed Guides
+- **[PRODUCTION.md](PRODUCTION.md)** - Complete production deployment guide
+- **[DEPLOYMENT-CHECKLIST.md](DEPLOYMENT-CHECKLIST.md)** - Step-by-step checklist
+- **[SECURITY.md](SECURITY.md)** - Security best practices
+
+### Recommended Stack (Free Tier)
+- **Database:** MongoDB Atlas (Free 512MB)
+- **Backend + ML:** Render (Free tier)
+- **Frontend:** Vercel (Free + CDN)
+
+**Total Cost:** $0/month (or ~$23/month for production)
+
+---
 
 ## 📄 License
 MIT

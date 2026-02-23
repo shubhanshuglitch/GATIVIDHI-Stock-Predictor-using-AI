@@ -12,7 +12,7 @@ const ML_SERVICE = process.env.ML_SERVICE_URL || 'http://localhost:8000';
 router.get('/search/:query', auth, async (req, res) => {
   try {
     const { query } = req.params;
-    const response = await axios.get(`${ML_SERVICE}/api/stock/search/${encodeURIComponent(query)}`);
+    const response = await axios.get(`${ML_SERVICE}/api/stock/search/${encodeURIComponent(query)}`, { timeout: 15000 });
     res.json(response.data);
   } catch (error) {
     res.status(error.response?.status || 500).json({ message: 'Error searching stocks' });
@@ -45,8 +45,8 @@ router.get('/:ticker', auth, async (req, res) => {
 
     // Fetch from ML service
     const [dataRes, infoRes] = await Promise.all([
-      axios.get(`${ML_SERVICE}/api/stock/${ticker}?period=${period}`),
-      axios.get(`${ML_SERVICE}/api/stock/${ticker}/info`).catch(() => ({ data: {} }))
+      axios.get(`${ML_SERVICE}/api/stock/${ticker}?period=${period}`, { timeout: 20000 }),
+      axios.get(`${ML_SERVICE}/api/stock/${ticker}/info`, { timeout: 15000 }).catch(() => ({ data: {} }))
     ]);
 
     // Transform data for MongoDB

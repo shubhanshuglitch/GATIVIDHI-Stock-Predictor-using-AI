@@ -89,34 +89,6 @@ class EvaluateRequest(BaseModel):
 
 # ── Stock Data Endpoints ─────────────────────────────────────────────────────
 
-@app.get("/api/stock/{ticker}")
-async def get_stock_data(ticker: str, period: str = "1y"):
-    """Fetch historical stock data."""
-    try:
-        df = fetch_stock_data(ticker, period)
-        df_features = add_features(df.copy())
-        
-        return {
-            "ticker": ticker.upper(),
-            "period": period,
-            "count": len(df),
-            "data": df.to_dict(orient="records"),
-            "features": df_features.to_dict(orient="records")
-        }
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-
-
-@app.get("/api/stock/{ticker}/info")
-async def get_info(ticker: str):
-    """Get stock info (name, sector, market cap, etc.)."""
-    try:
-        info = get_stock_info(ticker)
-        return info
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-
-
 @app.get("/api/stock/search/{query}")
 async def search_stocks(query: str):
     """Search for stock tickers matching a query."""
@@ -168,6 +140,34 @@ async def search_stocks(query: str):
         return {"query": query, "results": results}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/stock/{ticker}")
+async def get_stock_data(ticker: str, period: str = "1y"):
+    """Fetch historical stock data."""
+    try:
+        df = fetch_stock_data(ticker, period)
+        df_features = add_features(df.copy())
+        
+        return {
+            "ticker": ticker.upper(),
+            "period": period,
+            "count": len(df),
+            "data": df.to_dict(orient="records"),
+            "features": df_features.to_dict(orient="records")
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.get("/api/stock/{ticker}/info")
+async def get_info(ticker: str):
+    """Get stock info (name, sector, market cap, etc.)."""
+    try:
+        info = get_stock_info(ticker)
+        return info
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 # ── Prediction Endpoints ─────────────────────────────────────────────────────
@@ -401,7 +401,7 @@ async def evaluate_all(req: EvaluateRequest):
             model, _ = train_lstm(
                 processed['X_train'], processed['y_train'],
                 processed['X_test'], processed['y_test'],
-                epochs=30, batch_size=32, sequence_length=60
+                epochs=5, batch_size=32, sequence_length=60
             )
             test_preds = predict_lstm(model, processed['X_test'], processed['scaler'])
             test_actual = processed['scaler'].inverse_transform(
